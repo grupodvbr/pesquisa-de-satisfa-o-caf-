@@ -4,29 +4,28 @@
   <meta charset="UTF-8" />
   <title>Pesquisa de Satisfação</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<style>
-  body { background: #000; color: #fff; font-family: monospace, sans-serif; margin: 20px; }
-  img { display: block; margin: 0 auto; max-height: 80px; }
-  h1 { text-align: center; margin-bottom: 30px; }
-  form { max-width: 600px; margin: 0 auto; }
-  .question { margin-bottom: 20px; }
-  .question label { display: block; margin-bottom: 6px; }
-  input[type="text"], select, textarea {
-    width: 100%; padding: 10px; background: #000; border: 1px solid #fff;
-    color: #fff; border-radius: 4px; margin-bottom: 10px;
-  }
-  input[type="radio"] { margin-right: 8px; }
-  .options label { display: block; margin: 4px 0; }
-  .justify { display: none; margin-top: 10px; }
-  button {
-    background: #fff; color: #000; border: none; padding: 12px 20px; border-radius: 4px;
-    cursor: pointer; font-weight: bold;
-  }
-  button:hover { background: #ddd; }
-  .success { color: #0f0; margin-top: 20px; }
-  .error { color: #f00; margin-top: 20px; }
-</style>
-
+  <style>
+    body { background: #000; color: #fff; font-family: monospace, sans-serif; margin: 20px; }
+    img { display: block; margin: 0 auto; max-height: 80px; }
+    h1 { text-align: center; margin-bottom: 30px; }
+    form { max-width: 600px; margin: 0 auto; }
+    .question { margin-bottom: 20px; }
+    .question label { display: block; margin-bottom: 6px; }
+    input[type="text"], select, textarea {
+      width: 100%; padding: 10px; background: #000; border: 1px solid #fff;
+      color: #fff; border-radius: 4px; margin-bottom: 10px;
+    }
+    input[type="radio"] { margin-right: 8px; }
+    .options label { display: block; margin: 4px 0; }
+    .justify { display: none; margin-top: 10px; }
+    button {
+      background: #fff; color: #000; border: none; padding: 12px 20px; border-radius: 4px;
+      cursor: pointer; font-weight: bold;
+    }
+    button:hover { background: #ddd; }
+    .success { color: #0f0; margin-top: 20px; }
+    .error { color: #f00; margin-top: 20px; }
+  </style>
 </head>
 <body>
 
@@ -144,10 +143,10 @@
       <textarea name="climatizacao_justificativa" placeholder="Descreva o motivo"></textarea>
     </div>
   </div>
- <div class="question">
-    <label>O que gostaria que fosse adicionado ao cardápio?
- *</label>
-    <input type="text" name="nome" required>
+
+  <div class="question">
+    <label>O que gostaria que fosse adicionado ao cardápio?</label>
+    <input type="text" name="cardapio_sugestao">
   </div>
 
   <button type="submit">Enviar</button>
@@ -194,6 +193,7 @@ document.getElementById('pesquisaForm').addEventListener('submit', function(e) {
     atendimento_justificativa: document.querySelector('[name="atendimento_justificativa"]').value || '',
     climatizacao: document.querySelector('input[name="climatizacao"]:checked')?.value || '',
     climatizacao_justificativa: document.querySelector('[name="climatizacao_justificativa"]').value || '',
+    cardapio_sugestao: document.querySelector('[name="cardapio_sugestao"]').value || ''
   };
 
   fetch("https://script.google.com/macros/s/AKfycbzmAO269YcFMrP8WmST9giI_oawsEagD1PONo35Sdutws6yoca8KxUbIr17IajJ_WJ6Dg/exec", {
@@ -203,13 +203,13 @@ document.getElementById('pesquisaForm').addEventListener('submit', function(e) {
   })
   .then(r => r.text())
   .then(() => {
-    document.getElementById('status').innerHTML = "<p class='success'>Obrigado! Resposta enviada com sucesso.</p>";
+    document.getElementById('status').innerHTML = "<p class='success'>✅ Obrigado! Resposta enviada com sucesso.</p>";
     document.getElementById('pesquisaForm').reset();
     document.querySelectorAll('.justify').forEach(j => j.style.display = 'none');
     document.getElementById('outra-cidade').style.display = 'none';
   })
   .catch(err => {
-    document.getElementById('status').innerHTML = "<p class='error'>Erro: " + err + "</p>";
+    document.getElementById('status').innerHTML = "<p class='error'>❌ Erro: " + err + "</p>";
   });
 });
 </script>
