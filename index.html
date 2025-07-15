@@ -190,7 +190,7 @@ document.getElementById('pesquisaForm').addEventListener('submit', function(e) {
     climatizacao_justificativa: document.querySelector('[name="climatizacao_justificativa"]').value || '',
   };
 
-  fetch("https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec", {
+  fetch("https://script.google.com/macros/s/AKfycbzmAO269YcFMrP8WmST9giI_oawsEagD1PONo35Sdutws6yoca8KxUbIr17IajJ_WJ6Dg/exec", {
     method: "POST",
     body: JSON.stringify(data),
     headers: { "Content-Type": "application/json" }
