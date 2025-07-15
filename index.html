@@ -11,12 +11,20 @@
     form { max-width: 600px; margin: 0 auto; }
     .question { margin-bottom: 20px; }
     .question label { display: block; margin-bottom: 6px; }
-    input[type="text"], select, textarea { width: 100%; padding: 10px; background: transparent; border: 1px solid #fff; color: #fff; border-radius: 4px; }
+    input[type="text"], select, textarea {
+      width: 100%; padding: 10px; background: transparent; border: 1px solid #fff;
+      color: #fff; border-radius: 4px; margin-bottom: 10px;
+    }
     input[type="radio"] { margin-right: 8px; }
     .options label { display: block; margin: 4px 0; }
     .justify { display: none; margin-top: 10px; }
-    button { background: #fff; color: #000; border: none; padding: 12px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+    button {
+      background: #fff; color: #000; border: none; padding: 12px 20px; border-radius: 4px;
+      cursor: pointer; font-weight: bold;
+    }
     button:hover { background: #ddd; }
+    .success { color: #0f0; margin-top: 20px; }
+    .error { color: #f00; margin-top: 20px; }
   </style>
 </head>
 <body>
@@ -24,10 +32,10 @@
 <img src="https://static.wixstatic.com/media/d830b0_207a7b09d8f24ebc97b887c3d4d18691~mv2.png" alt="Logo Delícia Gourmet">
 <h1>Pesquisa de Satisfação</h1>
 
-<form>
+<form id="pesquisaForm">
 
   <div class="question">
-    <label>Nome e sobrenome</label>
+    <label>Nome e sobrenome *</label>
     <input type="text" name="nome" required>
   </div>
 
@@ -60,17 +68,18 @@
   </div>
 
   <div class="question">
-    <label>EM QUAL CIDADE MORA?</label>
+    <label>EM QUAL CIDADE MORA? *</label>
     <div class="options">
-      <label><input type="radio" name="cidade" value="Barreiras" onclick="toggleOutra()"> Barreiras-BA</label>
-      <label><input type="radio" name="cidade" value="Luis Eduardo" onclick="toggleOutra()"> Luis Eduardo Magalhães-BA</label>
+      <label><input type="radio" name="cidade" value="Barreiras-BA" onclick="toggleOutra()"> Barreiras-BA</label>
+      <label><input type="radio" name="cidade" value="Luis Eduardo Magalhães-BA" onclick="toggleOutra()"> Luis Eduardo Magalhães-BA</label>
       <label><input type="radio" name="cidade" value="Outra" onclick="toggleOutra()"> Outra</label>
     </div>
-    <div id="outra-cidade" style="display:none; margin-top:10px;">
-      <input type="text" name="cidade_outra" placeholder="Em qual cidade mora?">
+    <div id="outra-cidade" style="display:none;">
+      <input type="text" name="cidade_outra" placeholder="Qual cidade?">
     </div>
   </div>
 
+  <!-- Avaliação Ambiente -->
   <div class="question">
     <label>O QUE ACHOU DO NOSSO AMBIENTE?</label>
     <div class="options">
@@ -83,6 +92,7 @@
     </div>
   </div>
 
+  <!-- Avaliação Iluminação -->
   <div class="question">
     <label>O QUE ACHOU DA ILUMINAÇÃO?</label>
     <div class="options">
@@ -95,6 +105,7 @@
     </div>
   </div>
 
+  <!-- Avaliação Comida -->
   <div class="question">
     <label>COMO ESTAVA A COMIDA?</label>
     <div class="options">
@@ -107,6 +118,7 @@
     </div>
   </div>
 
+  <!-- Avaliação Atendimento -->
   <div class="question">
     <label>COMO AVALIA O ATENDIMENTO RECEBIDO?</label>
     <div class="options">
@@ -119,6 +131,7 @@
     </div>
   </div>
 
+  <!-- Avaliação Climatização -->
   <div class="question">
     <label>O QUE ACHOU DA CLIMATIZAÇÃO?</label>
     <div class="options">
@@ -132,24 +145,67 @@
   </div>
 
   <button type="submit">Enviar</button>
+  <div id="status"></div>
+
 </form>
 
 <script>
-  function toggleOutra() {
-    const outra = document.querySelector('input[name="cidade"][value="Outra"]').checked;
-    document.getElementById('outra-cidade').style.display = outra ? 'block' : 'none';
-  }
+function toggleOutra() {
+  const outra = document.querySelector('input[name="cidade"][value="Outra"]').checked;
+  document.getElementById('outra-cidade').style.display = outra ? 'block' : 'none';
+}
 
-  function toggleJustify(input) {
-    const question = input.name;
-    const justifyDiv = document.getElementById(`${question}-justify`);
-    if (input.value.toLowerCase() === "ruim") {
-      justifyDiv.style.display = "block";
-    } else {
-      justifyDiv.style.display = "none";
-      justifyDiv.querySelector("textarea").value = "";
-    }
+function toggleJustify(input) {
+  const question = input.name;
+  const justifyDiv = document.getElementById(`${question}-justify`);
+  if (input.value.toLowerCase() === "ruim") {
+    justifyDiv.style.display = "block";
+  } else {
+    justifyDiv.style.display = "none";
+    justifyDiv.querySelector("textarea").value = "";
   }
+}
+
+document.getElementById('pesquisaForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const data = {
+    nome: document.querySelector('[name="nome"]').value,
+    aniversario: document.querySelector('[name="dia"]').value + "/" +
+                  document.querySelector('[name="mes"]').value + "/" +
+                  document.querySelector('[name="ano"]').value,
+    telefone: document.querySelector('[name="telefone"]').value,
+    cidade: document.querySelector('input[name="cidade"]:checked')?.value === "Outra"
+            ? document.querySelector('[name="cidade_outra"]').value
+            : document.querySelector('input[name="cidade"]:checked')?.value || '',
+    ambiente: document.querySelector('input[name="ambiente"]:checked')?.value || '',
+    ambiente_justificativa: document.querySelector('[name="ambiente_justificativa"]').value || '',
+    iluminacao: document.querySelector('input[name="iluminacao"]:checked')?.value || '',
+    iluminacao_justificativa: document.querySelector('[name="iluminacao_justificativa"]').value || '',
+    comida: document.querySelector('input[name="comida"]:checked')?.value || '',
+    comida_justificativa: document.querySelector('[name="comida_justificativa"]').value || '',
+    atendimento: document.querySelector('input[name="atendimento"]:checked')?.value || '',
+    atendimento_justificativa: document.querySelector('[name="atendimento_justificativa"]').value || '',
+    climatizacao: document.querySelector('input[name="climatizacao"]:checked')?.value || '',
+    climatizacao_justificativa: document.querySelector('[name="climatizacao_justificativa"]').value || '',
+  };
+
+  fetch("https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec", {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: { "Content-Type": "application/json" }
+  })
+  .then(r => r.text())
+  .then(() => {
+    document.getElementById('status').innerHTML = "<p class='success'>Obrigado! Resposta enviada com sucesso.</p>";
+    document.getElementById('pesquisaForm').reset();
+    document.querySelectorAll('.justify').forEach(j => j.style.display = 'none');
+    document.getElementById('outra-cidade').style.display = 'none';
+  })
+  .catch(err => {
+    document.getElementById('status').innerHTML = "<p class='error'>Erro: " + err + "</p>";
+  });
+});
 </script>
 
 </body>
